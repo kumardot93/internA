@@ -9,7 +9,7 @@ def BranchAutoComplete(request):
     offset = 0
     if('offset' in request.GET):
         offset = int(request.GET['offset'])
-    bankList = Bank.objects.filter(branch__startswith=query_string).order_by('ifsc')[offset:]
+    bankList = Bank.objects.filter(branch__istartswith=query_string).order_by('ifsc')[offset:]
     if('limit' in request.GET):
         limit = int(request.GET['limit'])
         bankList = bankList[:limit]
@@ -25,7 +25,7 @@ def AutoComplete(request):
         offset = int(request.GET['offset'])
     bankList = Bank.objects.none()
     for fields in Bank._meta.concrete_fields[1:]:
-        filterVar = {fields.name+"__startswith": query_string}
+        filterVar = {fields.name+"__istartswith": query_string}
         bankList = bankList | Bank.objects.filter(**filterVar)
     bankList = bankList.order_by('ifsc')[offset:]
     if('limit' in request.GET):
